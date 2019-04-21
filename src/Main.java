@@ -7,21 +7,24 @@ public class Main {
 
         PPM image = new PPM(width, height, "test.ppm");
 
-        Vector corner= new Vector(-1.0f, -1.0f, -1.0f);
-        Vector dir = new Vector(0.0f, 0.0f, 1.0f);
+        Vector corner= new Vector(-2.0f, -1.0f, -1.0f);
+        Vector horizontal = new Vector(4.0f, 0.0f, 0.0f);
+        Vector vertical = new Vector(0.0f, 2.0f, 0.0f);
+        Vector origin = new Vector(0.0f, 0.0f, 2.0f);
 
         Sphere sphere  = new Sphere(new Vector(0.0f, 0.0f, 0.0f), 0.5f);
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
 
-                float dx = (((float) i) / width) * sceneWidth;
-                float dy = (((float) j) / height) * sceneHeight;
+                float v = (((float) i) / height);
+                float u = (((float) j) / width);
 
-                Ray eye = new Ray(new Vector(corner.x + dx, corner.y + dy , corner.z), dir);
+                Ray eye = new Ray(origin, corner.add(horizontal.mul(u).add(vertical.mul(v))));
+                Hit hit = new Hit();
 
-                if (sphere.intersect(eye)) {
-                    image.write(new Vector(1.0f, 0.0f, 0.0f));
+                if (sphere.intersect(eye, hit)) {
+                    image.write(hit.n);
                 } else {
                     image.write(new Vector(1.0f, 1.0f, 1.0f));
                 }
